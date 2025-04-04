@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Detox Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="C:/Users/pc/Documents/icon.png">
+    <style>
+        body {
+            font-family: 'Press Start 2P', sans-serif;
+            background-color: #111827; /* Darker background */
+            color: #f9fafb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-image: url('C:/Users/pc/Documents/no.jpeg'); /* Replace with your pixel art image */
+            background-size: cover;
+            background-position: center;
+            overflow-x: hidden;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 600px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #6ee7b7; /* Brighter title */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #counter {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #f87171; /* Stronger color */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .journal-section {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #d1d5db;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            resize: none;
+            box-sizing: border-box;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            font-family: 'Press Start 2P', sans-serif;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #38bdf8; /* Focus color */
+            box-shadow: 0 0 5px rgba(56, 189, 248, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-family: 'Press Start 2P', sans-serif;
+        }
+
+        #reset-button {
+            background-color: #3b82f6;
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        #reset-button:hover {
+            background-color: #2563eb;
+            transform: scale(1.05);
+        }
+
+        #relapse-button {
+            background-color: #ef4444;
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        #relapse-button:hover {
+            background-color: #dc2626;
+            transform: scale(1.05);
+        }
+
+        .message {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            backdrop-filter: blur(5px);
+            text-align: center;
+        }
+
+        #journal-entries-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            width: 90%;
+            max-width: 500px;
+            height: 80vh;
+            overflow-y: auto;
+            text-align: left;
+            font-size: 0.8rem;
+            color: #1f2937;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        #journal-entries-popup h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #6ee7b7;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #journal-entries-popup .entry-container {
+            margin-bottom: 1rem;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 5px;
+            background-color: #f9fafb;
+            overflow-y: auto;
+            max-height: 60vh;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        #journal-entries-popup .entry-container p {
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            color: #1f2937;
+        }
+
+        #journal-entries-popup button {
+            margin-top: 1rem;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            background-color: #3b82f6;
+            color: #ffffff;
+            transition: background-color 0.3s, transform 0.2s;
+            font-family: 'Press Start 2P', sans-serif;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        #journal-entries-popup button:hover {
+            background-color: #2563eb;
+            transform: scale(1.05);
+        }
+
+        .view-journal-button {
+            margin-top: 1rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            background-color: #8b5cf6;
+            color: #ffffff;
+            transition: background-color 0.3s, transform 0.2s;
+            font-family: 'Press Start 2P', sans-serif;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .view-journal-button:hover {
+            background-color: #7c3aed;
+            transform: scale(1.05);
+        }
+
+        .alternative-activity-section {
+            margin-top: 2rem;
+            text-align: left;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            padding-top: 1rem;
+        }
+
+        .alternative-activity-section h2 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #6ee7b7;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .alternative-activity-list {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            color: #1f2937;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .alternative-activity-list li {
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .check-button {
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #22c55e;
+            color: #ffffff;
+            border: none;
+            transition: background-color 0.3s, transform 0.2s;
+            font-family: 'Press Start 2P', sans-serif;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .check-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+
+        .checked {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+
+        @media (max-width: 640px) {
+            #app {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            #counter {
+                font-size: 1.5rem;
+            }
+
+            button {
+                font-size: 0.6rem;
+                padding: 8px 15px;
+            }
+
+            textarea {
+                font-size: 0.7rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            #journal-entries-popup {
+                width: 95%;
+                max-width: 90%;
+                height: 70vh;
+                font-size: 0.7rem;
+            }
+
+            #journal-entries-popup h2 {
+                font-size: 1rem;
+            }
+
+            #journal-entries-popup .entry-container {
+                max-height: 50vh;
+                font-size: 0.6rem;
+            }
+
+            .alternative-activity-list li {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <div id="app" class="bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-2xl font-semibold mb-4 text-blue-400">Detox Challenge</h1>
+        <div id="counter" class="text-4xl font-bold mb-4 text-red-400">Days: 0</div>
+        <div class="journal-section">
+            <textarea id="journal" placeholder="Journal: Reflect on your journey..." rows="4" class="w-full p-2 border border-gray-300 rounded-md mb-4"></textarea>
+        </div>
+        <div class="button-group">
+            <button id="reset-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Reset Counter</button>
+            <button id="relapse-button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">I Bypassed Limits</button>
+        </div>
+        <button class="view-journal-button">View Journal Entries</button>
+        <div id="message" class="mt-4 text-green-400 font-medium">Keep going! You've got this.</div>
+        <div id="journal-entries-popup">
+            <h2>Journal Entries</h2>
+            <div class="entry-container">
+            </div>
+            <button id="close-journal-popup">Close</button>
+        </div>
+        <div class="alternative-activity-section">
+            <h2>Alternative Activities</h2>
+            <ul class="alternative-activity-list">
+                <li>Read a book<button class="check-button">Check</button></li>
+                <li>Go for a walk<button class="check-button">Check</button></li>
+                <li>Meditate for 10 minutes<button class="check-button">Check</button></li>
+                <li>Call a friend<button class="check-button">Check</button></li>
+                <li>Work on a hobby<button class="check-button">Check</button></li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        let dayCount = parseInt(localStorage.getItem('dayCount')) || 0;
+        const counterDisplay = document.getElementById('counter');
+        const resetButton = document.getElementById('reset-button');
+        const relapseButton = document.getElementById('relapse-button');
+        const journalInput = document.getElementById('journal');
+        const messageDisplay = document.getElementById('message');
+        const journalEntriesPopup = document.getElementById('journal-entries-popup');
+        const closeJournalPopupButton = document.getElementById('close-journal-popup');
+        const journalEntriesContainer = journalEntriesPopup.querySelector('.entry-container');
+        const viewJournalButton = document.querySelector('.view-journal-button');
+        const alternativeActivityList = document.querySelector('.alternative-activity-list');
+
+        function updateCounter() {
+            counterDisplay.textContent = `Days: ${dayCount}`;
+            localStorage.setItem('dayCount', dayCount);
+        }
+
+        function resetCounter() {
+            dayCount = 0;
+            updateCounter();
+            journalInput.value = '';
+            localStorage.clear();
+            messageDisplay.textContent = "Counter reset. Don't give up!";
+            journalEntriesContainer.innerHTML = '';
+        }
+
+        function relapse() {
+            messageDisplay.textContent = "Oh no! You bypassed your limits. The counter has been reset.";
+            journalInput.value += "\n\nBypassed app limits. Need to reinforce boundaries.";
+            dayCount = 0;
+            updateCounter();
+        }
+
+        function displayJournalEntries() {
+            journalEntriesContainer.innerHTML = '';
+            const journalKeys = Object.keys(localStorage).filter(key => key.startsWith('journalEntries_'));
+            journalKeys.sort().forEach(key => {
+                const date = key.replace('journalEntries_', '');
+                const entry = localStorage.getItem(key);
+                const entryDiv = document.createElement('p');
+                entryDiv.textContent = `${date}: ${entry}`;
+                journalEntriesContainer.appendChild(entryDiv);
+            });
+        }
+
+        resetButton.addEventListener('click', resetCounter);
+        relapseButton.addEventListener('click', relapse);
+
+        journalInput.addEventListener('input', () => {
+            const journalKey = `journalEntries_${new Date().toISOString().split('T')[0]}`;
+            localStorage.setItem(journalKey, journalInput.value);
+        });
+
+        viewJournalButton.addEventListener('click', () => {
+            displayJournalEntries();
+            journalEntriesPopup.style.display = 'block';
+        });
+
+        closeJournalPopupButton.addEventListener('click', () => {
+            journalEntriesPopup.style.display = 'none';
+        });
+
+        window.onload = () => {
+            updateCounter();
+            const journalKey = `journalEntries_${new Date().toISOString().split('T')[0]}`;
+            journalInput.value = localStorage.getItem(journalKey) || '';
+        };
+
+        alternativeActivityList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('check-button')) {
+                const listItem = event.target.parentNode;
+                listItem.classList.toggle('checked');
+                const activity = listItem.textContent.replace('Check', '');
+                if (listItem.classList.contains('checked')) {
+                    messageDisplay.textContent = `Great job! You completed the activity: ${activity}`;
+                } else {
+                    messageDisplay.textContent = `Activity: ${activity} is marked as incomplete.`;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
